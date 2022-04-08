@@ -12,8 +12,7 @@ const app = express();
 const secret = v4();
 
 app.get('/', (req, res) => {
-    const origin = req.headers['origin']
-    res.send(`Hello World ${secret} - ${origin}`);
+    res.send(`Hello World ${secret} - ${PORT}`);
 });
 
 app.listen(PORT, HOST);

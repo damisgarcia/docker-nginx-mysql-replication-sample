@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  nginx:
+    build: 
+      context: ./
+      dockerfile: nginx/Dockerfile
+    container_name: nginx
+    depends_on:
+      - site
+      - site2
+    links:
+      - site
+      - site2
+    ports:
+      - 80:80
+    environment:
+      - NGINX_HOST=foobar.com
+      - NGINX_PORT=80
+  
+  site:
+    container_name: site1
+    build: 
+      context: ./
+      dockerfile: website/Dockerfile
+    environment:
+      - SITE_PORT=8080
+
+  site2:
+    container_name: site2
+    build: 
+      context: ./
+      dockerfile: website/Dockerfile
+    environment:
+      - SITE_PORT=8081
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8082:80
+    environment:
+      - PMA_HOST=mysql_master
+      - PMA_ARBITRARY=1
+    links:
+      - mysql_master
+  
+  mysql_master:
+    container_name: db_master
+    image: mariadb
+    environment:
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=user
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=blog
